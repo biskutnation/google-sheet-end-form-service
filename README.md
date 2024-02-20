@@ -1,2 +1,2 @@
 # google-sheet-end-form-service
-from award(s) form to fill up data to google sheet and also with email response
+from award(s) form to populate data on google sheet and also with email response
