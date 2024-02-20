@@ -1,0 +1,65 @@
+.row {
+    background-color: rgb(255, 225, 216);
+}
+
+.row:has(.butang) {
+    background-color: inherit;
+}
+
+.container-md {
+    background-color: darkmagenta;
+}
+
+.boddah {
+    border: solid 1px blueviolet;
+    border-collapse: collapse;
+}
+
+.bottom-bord {
+    border-bottom: 1px solid maroon;
+}
+
+/* .remove, .add {
+    background-color: lightblue
+} */
+
+.px50 {
+    width: 50px
+}
+
+.px38 {
+    width: 38px
+}
+
+input {
+    width: 100%;    
+}
+
+
+
+#firstAddButton, #secondAddButton {
+    color: rgb(64, 122, 194);
+}
+
+.bi-x-circle-fill {
+    color: crimson
+}
+
+i {
+    font-size: large;
+}
+
+.smol {
+    font-size:medium
+}
+
+.italic {
+    font-style: italic;
+    font-size: small;
+}
+
+@media (min-width: 768px) { 
+    ::placeholder {
+      color: transparent;
+    }
+  }
