@@ -85,7 +85,7 @@ document.getElementById("firstAddButton")
 
     });
 
-// 141123 previously addFourCols()
+// 141123 previously known as addFourCols()
 function addTitleDateRow(){
     const titleDate = document.getElementById("titleDate");
     let parent = document.createElement("div");
@@ -162,6 +162,7 @@ function populateInputsById(id,array2D) {
         }
 }
 
+// this one is old stuff, have to refactor this later on
 const params = (new URL(window.location.href)).searchParams;
 if (params.get('by') != null) document.getElementsByName('EnterBy')[0].value = params.get('by');
 
@@ -175,9 +176,9 @@ const inputNamesObj = {
     NoIC : 'icNos', 
     Email : 'emails',
     Title : 'titles',
-    Date : 'dates',
-    ssId : 'ssId',
-    sht : 'sht'
+    Date : 'dates'
+    // ssId : 'ssId', // no more ssid, just awdId now
+    // sht : 'sht'
     //Language : 'language',
     //EnterBy : '',
     //Link : ''
@@ -192,7 +193,7 @@ function pushToHiddenInputs(obj) {
         let name = document.getElementsByName(key);
         let plural = document.getElementsByName(obj[key]);
 
-        if (plural.length < 1) continue; // especially for form without Language & PsuedoName inputs
+        if (plural.length < 1) continue; 
 
         let array = [];
         
@@ -205,8 +206,8 @@ function pushToHiddenInputs(obj) {
 }
 
 
-const actionURL = "https://script.google.com/macros/s/AKfycbzmeVR4LqdrC4qgKQVxurD1P2uz9sWA25rcn3g_yQ9saYNDQj8o_wBbCnVX9YIy6i6i/exec";
-
+const actionURL = "https://script.google.com/macros/s/AKfycbyNzz93yv0aokOI9Ge0Eq3ROUBbWXC666nwKLz9MDu5y6XksSteg22945MWxCKmJe1w/exec";
+                                                    
 function CheckError(response) {
     if (response.status >= 200 && response.status <= 299) {
       return response.json();
@@ -224,7 +225,7 @@ function postSubmit(formId,lang) {
     pushToHiddenInputs(inputNamesObj);
     let form = document.forms[formId];
     console.time("fetch");
-    //document.getElementById('sixCols').scrollIntoView();
+    
     fetch(actionURL, {
          method: 'POST', 
          body: new FormData(form)
@@ -331,9 +332,9 @@ function displayHide(selector) {
 }
 
 // 20/11/23 added
-function visibilityHide(selector,hidden_visibility = "hidden") {
+function visibilityHide(selector,hidden_visible = "hidden") {
     const el = document.querySelector(selector);
-    return el.style.visibility = hidden_visibility;
+    return el.style.visibility = hidden_visible;
 }
 
 function endProcess() {
@@ -414,148 +415,93 @@ function validation(lang) {
     return (true);
 }
 
-// 19/11/2023 updated
-// category option behavior changes via media type selection
-function optMediaType() {
+// 29/02/2024 updated
+// category option behavior changes via category type selection
+function optCategory_for_Agro() {
     
-    const mediaType = document.getElementById("mediaType");
+    // const mediaType = document.getElementById("mediaType");
     const category = document.getElementById("category");
     
-    let val = mediaType.value[0]; // first letter of media type
+    // let val = mediaType.value[0]; // first letter of media type
     
     // IDs' variable    
     const first = "#firstAddButton";
     const second = "#secondAddButton";
 
     // empty language value or initial point
-    if (!val || val === "") {
-        category.disabled = true;
-        category.options[0].selected = true;
+    // if (!val || val === "") {
+    //     category.disabled = true;
+    //     category.options[0].selected = true;
         
-        visibilityHide(first);
-        visibilityHide(second);
-        console.log("Media type not selected");
-        return;
-    }
+    //     visibilityHide(first);
+    //     visibilityHide(second);
+    //     console.log("Media type not selected");
+    //     return;
+    // }
     
-    console.log("type:",val);
+    // 29/02/2024
+    if (category.value === "" || !category.value) {
+        visibilityHide(first)
+        visibilityHide(second)
+        console.log("please select category")
+        return
+    }
+
+    // console.log("type:",val);
     category.disabled = false;
-    category.options[0].selected = true;
+    // category.options[0].selected = true;
     
-    // val: F|G|C|V|R;
+    // val: A|B|C|D;
+    visibilityHide(first,"visible")
+    visibilityHide(second);
+    oneChildOnly("titleDate");
+    console.log("team members allowed and one title per entry only")
+    return;
     
-    // Photography
-    if (val === "F") {
-        for (option of category.options) {
-            option.hidden = true;
-            if (option.value === "J. Single Foto" || option.value === "K. Esei Foto") {
-                option.hidden = false;
-            }
-        }
-        visibilityHide(first);
-        visibilityHide(second);
-        oneChildOnly("userDetails");
-        oneChildOnly("titleDate");
-        console.log("individual and one title only")
-        return;
-    }
-
-    // Graphic
-    if (val === "G") {
-        for (option of category.options) {
-            option.hidden = true;
-            if (option.value[0] === "B" || option.value[0] === "C") {
-                option.hidden = false;
-            }
-        }
-        visibilityHide(first,"visible");
-        visibilityHide(second);
-        oneChildOnly("titleDate");
-        console.log("team members allowed and one title only")
-        return;
-    }
-
-    // Print 
-    if (val === "C") {
-        
-        const index = "DEFGHI";
-        const muda = "A. Muda Cetak";
-        for (option of category.options) {
-            option.hidden = true;
-            if (index.indexOf(option.value[0]) !== -1 || option.value === muda) option.hidden = false;
-        }  
-        visibilityHide(first,"visible");
-        visibilityHide(second,"visible");
-        console.log("team members allowed")
-        
-        // category.addEventListener("change",function(){optPrintMedia()}); // 12/12/23 affecting other categories value
-
-        return;
-    }
-
-    // Video
-    if (val === "V") {
-        
-        const index = "DELMNO";
-        const muda = "A. Muda TV";
-        for (option of category.options) {
-            option.hidden = true;
-            if (index.indexOf(option.value[0]) !== -1 || option.value === muda) option.hidden = false;
-        }  
-        visibilityHide(first,"visible");
-        visibilityHide(second,"visible");
-        console.log("team members allowed")
-        return;
-    }
-
-    // Radio
-    if (val === "R") {
-        
-        const index = "DEPQRS";
-        for (option of category.options) {
-            option.hidden = true;
-            if (index.indexOf(option.value[0]) !== -1) option.hidden = false;
-        }  
-        visibilityHide(first,"visible");
-        visibilityHide(second,"visible");
-        console.log("team members allowed")
-        return;
-    }  
 };
 
-// 26/01/24 there is a new change
-function optPrintMedia() {
+function optCategory_for_KPKT() {
+    
+    // const mediaType = document.getElementById("mediaType");
     const category = document.getElementById("category");
-
+    
+    // let val = mediaType.value[0]; // first letter of media type
+    
     // IDs' variable    
     const first = "#firstAddButton";
     const second = "#secondAddButton";
 
-    visibilityHide(first, "visible");
-    visibilityHide(second,"visible");
     
-    const indexOneTitle = 'BCDFMNOPQRS' // 26/01/24      // BC are graphic categories, MNO are TV, PQRS are radio
-
-    // if ( category.value[0] === "D" || category.value[0] === "F") { // OLD
-    // 26/01/24
-    if ( indexOneTitle.indexOf(category.value[0]) > -1) {
-        visibilityHide(second);
-        oneChildOnly("titleDate");
-        return console.log("team members allowed and one title only")
+    // 29/02/2024
+    if (category.value === "" || !category.value) {
+        visibilityHide(first)
+        visibilityHide(second)
+        console.log("please select category")
+        return
     }
 
-    const indexOneUser = 'AGJK'; // Muda, Kolum, Foto, Esei Foto
-
-    if (indexOneUser.indexOf(category.value[0]) > -1) {
-        visibilityHide(first);
-        visibilityHide(second);
-        if ( category.value[0] === "A" || category.value[0] === "G") visibilityHide(second,"visible");
+    // console.log("type:",val);
+    category.disabled = false;
+    // category.options[0].selected = true;
+    
+    // for F. Foto only
+    if (category.value[0] === "F") {
+        visibilityHide(first)
+        visibilityHide(second)
         oneChildOnly("userDetails");
-        return console.log("individual only")
+        oneChildOnly("titleDate");
+        console.log("individual and one title per entry only")
+        return
     }
 
-    return console.log("team members allowed")
-}
+    visibilityHide(first,"visible")
+    visibilityHide(second);
+    oneChildOnly("titleDate");
+    console.log("team members allowed and one title per entry only")
+    return;
+    
+};
+
 
 // this is not one child policy..... JK
 function oneChildOnly(parent_Id) {
@@ -566,15 +512,19 @@ function oneChildOnly(parent_Id) {
     }
 }
 
-// eventlistener on mediaType id 
-if(document.getElementById("mediaType")) {
-    window.addEventListener("load",function(){optMediaType()});
-    document.getElementById("mediaType").addEventListener("change",function(){optMediaType()});
-    document.getElementById("category").addEventListener("change",function(){optPrintMedia()});
-    
-    // 22/11/23 // OLD
-    // window.addEventListener("load",function(){datalistRun()});
-};
+const AWARD_ID = document.getElementsByName("awdId")[0].value
+
+// add event listener onload & change on category option
+if(AWARD_ID === "Agro24") {
+    window.addEventListener("load",function(){optCategory_for_Agro()});
+    document.getElementById("category").addEventListener("change",function(){optCategory_for_Agro()});
+}
+
+if(AWARD_ID === "KPKT24") {
+    window.addEventListener("load",function(){optCategory_for_KPKT()});
+    document.getElementById("category").addEventListener("change",function(){optCategory_for_KPKT()});
+}
+
 
 // ************ for datalist tag ********** 22/11/23 **************
 
@@ -585,7 +535,7 @@ function appendOption(parent,value) {
 }
 
 let unwanted = `UM,UKM,SSM,PMO,Retired,KKM,Top Gear,PBB`.split(",")
-let orgasIndex = 0;
+let orgasIndex = 0; // for log purpose 
 
 function addListOfOptions(array) {
     array.forEach(el=> {
@@ -595,6 +545,14 @@ function addListOfOptions(array) {
         orgasIndex++
     })
 }
+
+// query string to input field
+(new URL(window.location.href))
+    .searchParams
+    .forEach((x, y) => {
+        if (!document.getElementById(y)) return console.error("param query error: " + y);
+        document.getElementById(y).value = x;
+    });
 
 const datalistRun = async() => {
 
@@ -610,6 +568,6 @@ const datalistRun = async() => {
 
 
 // 26/01/24
-if(document.getElementsByName("organisation")[0]) {
-    window.addEventListener("load",function(){datalistRun()});
-}
+// if(document.getElementsByName("organisation")[0]) {
+//     window.addEventListener("load",function(){datalistRun()});
+// }
