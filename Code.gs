@@ -1,36 +1,14 @@
 // https://script.google.com/macros/s/AKfycbyNzz93yv0aokOI9Ge0Eq3ROUBbWXC666nwKLz9MDu5y6XksSteg22945MWxCKmJe1w/exec
 
 // procedure for newly added award, should consider:
-//  • ssid, spreadsheet id, sheet name
-//  • sendingEmail(DATANEWROW,SSID)
+//  • award_id, spreadsheet id, sheet name
+//  • sendingEmail(DATANEWROW,essences)
 //  • catObj which will return value of category/language long wording 
-//  • email title in getTitleString(ssid)
+//  • email title & template in sheet_essentials
+//  
 
-// 16/02/2024
-
-// function doPost(e) {
-
-//   var result = "";
-//   var response = "";
-
-//   try {
-//     response =  writeToSheet(e);
-//     result = "Success!";
-//    } 
-//    catch(error) {
-//      Logger.log(error);
-//      result = "Error";
-//      response = error;
-//    }
-  
-//   Logger.log(response);
-//   return ContentService
-//     .createTextOutput(JSON.stringify({"Result" : result,response}))
-//     .setMimeType(ContentService.MimeType.JSON);
-
-// }
-
-function doPost(e = test_parameter()) {
+// e = test_parameter()
+function doPost(e) {
 
   var result = "";
   var response = "";
@@ -46,9 +24,9 @@ function doPost(e = test_parameter()) {
    }
   
   Logger.log("response:\n\n"+response);
-  // return ContentService
-  //   .createTextOutput(JSON.stringify({"Result" : result,response}))
-  //   .setMimeType(ContentService.MimeType.JSON);
+  return ContentService
+    .createTextOutput(JSON.stringify({"Result" : result,response}))
+    .setMimeType(ContentService.MimeType.JSON);
 
 }
 
@@ -76,7 +54,7 @@ function sheet_essentials(award_id) {
       email_title : "abcdefgijklmnopqrstuvwxyz"
     }
   }
-  essentials[award_id].getCategoryObject = function() {return categoryObject(award_id)}; // this is quite complicate to explain. the purpose is not to call yet, just standby a function on getting an object without firing it straight away.
+  essentials[award_id].getCategoryObject = function() {return categoryObject(award_id)}; // this is quite complicated to explain. the purpose is not to call yet, just standby a function on getting an object without firing it straight away.
 
   return essentials[award_id] || essentials['default']
 }
@@ -86,25 +64,25 @@ function getColumnFromHeaders(column_name,column_headers = "headers") {
   return col
 }
 
+// use this to pass parameters on do_post or writeToSheet
 function test_parameter() {
   
   let object = {
     parameter : {
-      // ssId : "KPKT24",
       // awdId : "KPKT24",
       awdId : "Agro24",
       Category : "G. Kredit Komuniti",
       MediaType : "Foto",
       CatId : "***",
-      Name : "Gilded Butler,\nFeranico Gonchalez",
+      Name : "Jihadian Butler,\nFeranico Gonchalez",
       Organisation : "Awatni Media",
       Title : "Satisfaction, Correlation, Visitation",
       Date : "01/02/03,\n04/05/26,\n09/09/09",
       NoIC : "897454-98-6765,\n563876-49-8658",
-      Email : "bukitledangmpi*yahoo.com,\npress2mpi@gmail.com",
+      Email : "press2mpi@gmail.com\n,bukitledangmpi*yahoo.com,\npress2mpi@gmail.com",
       NoHP : "03-75631914",
       Link : "www.example.com",
-      Send_Email : true
+      Send_Email : "no"
       //MailStatus : "email pending..."
     }
   }
@@ -112,6 +90,7 @@ function test_parameter() {
   return object
 }
 
+// for testing purpose
 function logThis(param = test_parameter()) {
   Logger.log(param)
 }
@@ -125,7 +104,7 @@ function check_Yes_No(status) {
 function writeToSheet(e) {
   // write parameter values to sheet & return data of NEWROW
 
-  const essences = sheet_essentials(e.parameter.awdId) // remember to change ssId to awdId
+  const essences = sheet_essentials(e.parameter.awdId) // from ssId to awdId
   const SEND_EMAIL = e.parameter.Send_Email;
 
   Logger.log(`Spread & Sheet : ${essences.SPREAD_ID} & ${essences.SHEET}
@@ -161,7 +140,7 @@ function writeToSheet(e) {
   const DATANEWROW = SHEET.getRange(NEWROW,1,1,row.length).getDisplayValues()[0];
   //Logger.log(`Data : ${DATANEWROW}`)
   
-  let emailStatus = "did not send";
+  let emailStatus = "did not send"; // default status but check yes no could alter it
   let col_MailStatus = getColumnFromHeaders("MailStatus",headers);
 
   if (check_Yes_No(SEND_EMAIL)) emailStatus = sendingEmail(DATANEWROW,essences);
@@ -196,6 +175,7 @@ function sendingEmail(data,essences) {
    
   let html = getHTMLcontent(data,essences);
   essences.email_title = essences.email_title.replace("{{xxyyzz}}",data[1]);
+  
   let mail_result;
 
   // send email yo
