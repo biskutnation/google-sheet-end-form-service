@@ -8,7 +8,29 @@
 
 // 16/02/2024
 
-function doPost(e) {
+// function doPost(e) {
+
+//   var result = "";
+//   var response = "";
+
+//   try {
+//     response =  writeToSheet(e);
+//     result = "Success!";
+//    } 
+//    catch(error) {
+//      Logger.log(error);
+//      result = "Error";
+//      response = error;
+//    }
+  
+//   Logger.log(response);
+//   return ContentService
+//     .createTextOutput(JSON.stringify({"Result" : result,response}))
+//     .setMimeType(ContentService.MimeType.JSON);
+
+// }
+
+function doPost(e = test_parameter()) {
 
   var result = "";
   var response = "";
@@ -23,10 +45,10 @@ function doPost(e) {
      response = error;
    }
   
-  Logger.log(response);
-  return ContentService
-    .createTextOutput(JSON.stringify({"Result" : result,response}))
-    .setMimeType(ContentService.MimeType.JSON);
+  Logger.log("response:\n\n"+response);
+  // return ContentService
+  //   .createTextOutput(JSON.stringify({"Result" : result,response}))
+  //   .setMimeType(ContentService.MimeType.JSON);
 
 }
 
@@ -40,6 +62,13 @@ function sheet_essentials(award_id) {
       email_template : "KPKT_emel",
       email_title : "AKeMedia KPKT 2024 : Penyertaan Diterima ({{xxyyzz}})"
     },
+    Agro24 : {
+      SPREAD_ID : "1qV96nOjoEENgxfDlZHTkfPeF9_dwk5Mg0TVQ-dSr0iU",
+      SHEET : "responseAgro24",
+      email_template : "KPKT_emel",
+      email_title : "Anugerah Media Agrobank 2024 : Penyertaan Diterima ({{xxyyzz}})"
+    }
+    ,
     "default" : {
       SPREAD_ID : "the default doesnt have spreadsheet",
       SHEET : "",
@@ -47,7 +76,7 @@ function sheet_essentials(award_id) {
       email_title : "abcdefgijklmnopqrstuvwxyz"
     }
   }
-  essentials[award_id].getCategoryObject = function() {return categoryObject(award_id)}; // this is quite complicate to explain. the purpose is not to call yet on getting object
+  essentials[award_id].getCategoryObject = function() {return categoryObject(award_id)}; // this is quite complicate to explain. the purpose is not to call yet, just standby a function on getting an object without firing it straight away.
 
   return essentials[award_id] || essentials['default']
 }
@@ -61,18 +90,21 @@ function test_parameter() {
   
   let object = {
     parameter : {
-      ssId : "KPKT24",
+      // ssId : "KPKT24",
+      // awdId : "KPKT24",
+      awdId : "Agro24",
       Category : "G. Kredit Komuniti",
       MediaType : "Foto",
-      CatId : "",
-      Name : "Gilded Butler, Feranico Gonchalez",
+      CatId : "***",
+      Name : "Gilded Butler,\nFeranico Gonchalez",
       Organisation : "Awatni Media",
       Title : "Satisfaction, Correlation, Visitation",
-      Date : "01/02/03, 04/05/26, 09/09/09",
-      NoIC : "897454-98-6765, 563876-49-8658",
-      Email : "bukitledangmpi*yahoo.com, press2mpi@gmail.com",
+      Date : "01/02/03,\n04/05/26,\n09/09/09",
+      NoIC : "897454-98-6765,\n563876-49-8658",
+      Email : "bukitledangmpi*yahoo.com,\npress2mpi@gmail.com",
       NoHP : "03-75631914",
-      Link : "www.example.com"
+      Link : "www.example.com",
+      Send_Email : true
       //MailStatus : "email pending..."
     }
   }
@@ -80,11 +112,22 @@ function test_parameter() {
   return object
 }
 
-function writeToSheet(e = test_parameter()) {
+function logThis(param = test_parameter()) {
+  Logger.log(param)
+}
+
+function check_Yes_No(status) {
+    let valid = ["yes","Yes","YES",true]
+    if (valid.indexOf(status) > -1) return true
+    return false
+}
+
+function writeToSheet(e) {
   // write parameter values to sheet & return data of NEWROW
 
-  const essences = sheet_essentials(e.parameter.awdId) // remember to change ssId to award_id
-    
+  const essences = sheet_essentials(e.parameter.awdId) // remember to change ssId to awdId
+  const SEND_EMAIL = e.parameter.Send_Email;
+
   Logger.log(`Spread & Sheet : ${essences.SPREAD_ID} & ${essences.SHEET}
   Name(s) : ${e.parameter.Name}  `)
 
@@ -118,13 +161,14 @@ function writeToSheet(e = test_parameter()) {
   const DATANEWROW = SHEET.getRange(NEWROW,1,1,row.length).getDisplayValues()[0];
   //Logger.log(`Data : ${DATANEWROW}`)
   
-  // email handling
-  let emailStatus = sendingEmail(DATANEWROW,essences);
+  let emailStatus = "did not send";
   let col_MailStatus = getColumnFromHeaders("MailStatus",headers);
-  if (!emailStatus) {
-    emailStatus = "mail error";
-    SHEET.getRange(NEWROW,col_MailStatus).setValue(emailStatus);
-  }
+
+  if (check_Yes_No(SEND_EMAIL)) emailStatus = sendingEmail(DATANEWROW,essences);
+  if (!emailStatus) emailStatus = "mail error";
+  
+  // expect 3 kind of email status here : did not send | mail error | sent!
+  SHEET.getRange(NEWROW,col_MailStatus).setValue(emailStatus);
   
   DATANEWROW[col_MailStatus-1] = emailStatus
     
@@ -228,6 +272,12 @@ function categoryObject(award_id) {
                      Cetak : 'Media Cetak & Portal Berita',
                         TV : 'Media Penyiaran Televisyen & Video Dalam Talian',
                      Radio : 'Media Penyiaran Radio'
+    },
+    Agro24 : {
+            'A. Cetak' : 'A. ',
+               'B. TV' : 'B. ',
+            'C. Radio' : 'C. ',
+            'D. Sains' : 'D. '
     },
     "default" : "no stuff here"
   }
