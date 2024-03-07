@@ -49,7 +49,7 @@ function incrementRecount(id) {
 function addUserRow(){
     const userDetails = document.getElementById("userDetails");
     let parent = document.createElement("div");
-    parent.setAttribute("class","row my-2 my-md-0 pb-1 justify-content-between")
+    parent.setAttribute("class","row inputsRow my-2 my-md-0 pb-1 justify-content-between")
     
     // first child
     addIncrementCell("names",parent);
@@ -89,7 +89,7 @@ document.getElementById("firstAddButton")
 function addTitleDateRow(){
     const titleDate = document.getElementById("titleDate");
     let parent = document.createElement("div");
-    parent.setAttribute("class","row py-1")
+    parent.setAttribute("class","row inputsRow py-1")
 
     // first child
     addIncrementCell("titles",parent);
@@ -114,24 +114,39 @@ function addTitleDateRow(){
 
 document.getElementById("secondAddButton").addEventListener("click",()=>{addTitleDateRow()});
 
-let arr1 = [ 
-    [ 'Alf The Fred', 'ic_01', 'bukitledangmpi@yahoo.com', 'hp_01' ],
-    [ 'name_02', 'ic_02', 'trainingmpi2945@gmail.com', 'hp_02' ],
-    [ 'name_03', 'ic_03', 'testing@test.com', 'hp_03' ],
-    [ 'Shizuka Redline', 'ic_04', 'field@example.com', 'hp_04' ],
-    [ 'name_05', 'ic_05', 'email_05', 'hp_05' ]
-    ];
+function testDataObject(key) {
 
-let arr2 = [
-    [ 'item_01', 345 ],
-    [ 'item_02', 2 ],
-    [ 'item_03', 146 ],
-    [ 'item_04', 678 ],
-    [ 'item_05', 19 ]
-    ];
+    const obj = {
+        users : [ 
+            [ 'Alf The Fred', 'ic_01', 'bukitledangmpi@yahoo.com', 'hp_01' ],
+            [ 'name_02', 'ic_02', 'trainingmpi2945@gmail.com', 'hp_02' ],
+            [ 'name_03', 'ic_03', 'testing@test.com', 'hp_03' ],
+            [ 'Shizuka Redline', 'ic_04', 'field@example.com', 'hp_04' ],
+            [ 'name_05', 'ic_05', 'email_05', 'hp_05' ]
+        ],
+        titleDate : [
+            [ 'item_01', 345 ],
+            [ 'item_02', 2 ],
+            [ 'item_03', 146 ],
+            [ 'item_04', 678 ],
+            [ 'item_05', 19 ]
+        ],
+        organisation : [
+            "Brentford United",
+            "Jimmy Choo",
+            "Wonka's Chocolate Factory",
+            "Wankel Engine Workshop",
+            "Dinamika Serbaboleh",
+            "Spice Sand of Life",
+            "Govern With Might"
+        ],
+        www : [
+            "www.mpi.my","www.example.com","www.google.com","www.gsc.com","www.itch.io"
+        ]
+    }
+    return obj[key]
+}
 
-
-// ignore this for a while
 function buttonClicks(name,arr,id) {
     // clicks button based on array length
     // can be improved especially on i & name, maybe put default statement
@@ -145,8 +160,8 @@ function buttonClicks(name,arr,id) {
 
 // ignore this for a while
 function populateInputsById(id,array2D) {
-    let parent = document.getElementById(id).getElementsByTagName("div");
-
+    let parent = document.getElementById(id).getElementsByClassName("inputsRow");
+    
     let i = 0;
     for ( els of parent ) {
         let inputs = els.getElementsByTagName("input");
@@ -186,8 +201,8 @@ const inputNamesObj = {
 
 
 function pushToHiddenInputs(obj) {
-    // to extract values from existing names based on object value
-    // and push those value into hidden names
+    // to extract values from existing input(s) based on object value
+    // and push those value into hidden input(s) 
 
     for (key in obj) {
         let name = document.getElementsByName(key);
@@ -247,22 +262,39 @@ function postSubmit(formId,lang) {
     console.log("this submission will email confirmation to recipient")    
 }
 
-// ignore this for a while
+function randomMath(number) {
+    return Math.floor(Math.random()*number)
+}
+
 // populate inputs
 function abc() {
     
-    document.getElementsByName("category")[0][6].selected = true; 
-    document.getElementsByName("mediaType")[0][3].selected = true; 
+    const obj = {
+        cat : document.getElementsByName("category")[0],
+        media_type : document.getElementsByName("mediaType")[0],
+        link : document.getElementsByName("Link")[0]
+    }
+    obj.cat_len = obj.cat.length;
+    obj.media_len = obj.media_type ? obj.mediaType.length : undefined;
 
-    buttonClicks("names",arr1,"firstAddButton");
-    buttonClicks("titles",arr2,"secondAddButton");
+
+    obj.cat[randomMath(obj.cat_len)].selected = true; 
+    if (obj.media_type) obj.media_type[randomMath(obj.media_type)].selected = true; 
+
+    let users = testDataObject("users");
+    let titleDate = testDataObject("titleDate")
+
+    buttonClicks("names",users,"firstAddButton");
+    buttonClicks("titles",titleDate,"secondAddButton");
     
-    populateInputsById("userDetails",arr1);
-    populateInputsById("titleDate",arr2);
+    populateInputsById("userDetails",users);
+    populateInputsById("titleDate",titleDate);
     
-    document.getElementsByName("organisation")[0].value = "Brentford United";
-    //if (document.getElementsByName("language").length != 0) document.getElementsByName("language")[0].options[2].selected = true;
-    //if (document.getElementsByName("publication").length != 0) document.getElementsByName("publication")[0].value = "Sasbadi";
+    let orga = testDataObject("organisation")[randomMath(testDataObject("organisation").length)];
+    document.getElementsByName("organisation")[0].value = orga;
+    
+    if (obj.link) obj.link.value = testDataObject("www")[randomMath(testDataObject("www").length)];
+    
 
     }
 console.log("Try abc()");
