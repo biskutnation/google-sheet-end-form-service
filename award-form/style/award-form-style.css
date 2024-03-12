@@ -1,0 +1,88 @@
+.row {
+    /* background-color: rgb(229, 161, 141); */
+    background-color: #f7b985;
+}
+
+.row:has(.butang) {
+    background-color: inherit;
+}
+
+.inputsRow.row:nth-child(odd) {
+    background-color: #f4cbaa;
+}
+
+.container-md {
+    background-color: darkmagenta;
+}
+
+.boddah {
+    border: solid 1px blueviolet;
+    border-collapse: collapse;
+}
+
+.bottom-bord {
+    border-bottom: 1px solid crimson;
+    background-color: crimson;
+}
+
+/* .remove, .add {
+    background-color: lightblue
+} */
+
+.px50 {
+    width: 50px
+}
+
+.px38 {
+    width: 38px
+}
+
+input {
+    width: 100%; 
+    
+}
+
+.form-control, .form-select {
+    background-color: #fdeee0;
+    border-color: transparent;
+}
+
+#firstAddButton, #secondAddButton {
+    color: rgb(64, 122, 194);
+}
+
+.bi-x-circle-fill {
+    color: crimson
+}
+
+i {
+    font-size: large;
+}
+
+.smol {
+    font-size:medium
+}
+
+.italic {
+    font-style: italic;
+    font-size: small;
+}
+
+@media (min-width: 768px) { 
+    ::placeholder {
+      color: transparent !important;
+    }
+
+    .inputsRow div:not(:first-child) {
+        padding-right: 0px;
+    } 
+    
+}
+
+@media (max-width: 767.98px) { 
+
+    /* #titleDate .inputsRow div:not(:first-child) {
+        padding-right: 0px;
+    }  */
+    
+}
