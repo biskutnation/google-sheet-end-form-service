@@ -465,7 +465,7 @@ function validation(lang) {
 }
 
 
-// category option behavior changes
+// media type & category option behavior changes
 function optCategory_for_Agro(first_option_selected) {
     
     const mediaType = document.getElementById("mediaType");
@@ -484,15 +484,14 @@ function optCategory_for_Agro(first_option_selected) {
        
     // 1st checkpoint: media type
     if (mediaVal === "" || !mediaVal) {
-        console.log("please select media type")
+        console.log("%c please select media type ","background-color: #ffd000; color: #2f4f4f")
         category.disabled = true
         return
     }
-
-    console.log("media type:", mediaType.value);
-    if (first_option_selected) category.options[0].selected = true; // select ......... 
-    category.disabled = false;    
-      
+    
+    category.disabled = false;
+        
+    // for reference
     // mediaVal: C|V|R
     // options[0] 
     // options[1] A. Berita
@@ -500,35 +499,34 @@ function optCategory_for_Agro(first_option_selected) {
     // options[3] C. Berita Video
     // options[4] D. Doku Video
     // options[5] E. Radio
-    // options[6] F. Sains
+    // options[6] F. Sains      
 
-    for (option of category.options) {
-        option.hidden = true
-        if (!option.value) option.hidden = false;
-    }
-    
-    // cetak
-    if (mediaVal.search("C") !== -1) {
-        category.options[1].hidden = false;
-        category.options[2].hidden = false;
-        category.options[6].hidden = false;    
-    }
+    if (first_option_selected) {
+        category.options[0].selected = true // default category select .........
 
-    // video
-    if (mediaVal.search("V") !== -1) {
-        category.options[3].hidden = false;
-        category.options[4].hidden = false;
-        category.options[6].hidden = false;
-    }
+        const obj = {
+            C : [1,2,6],    // cetak
+            V : [3,4,6],    // video
+            R : [5]         // radio
+        }
 
-    // radio
-    if (mediaVal.search("R") !== -1) {
-        category.options[5].hidden = false;
+        // hide all category options except the first option
+        for (option of category.options) {
+            option.hidden = true
+            if (!option.value) option.hidden = false;
+        }        
+        
+        // make the certain option visible
+        for (index of obj[mediaVal]) {
+            category.options[index].hidden = false;
+            // console.log("index : " + index)
+        }
     }
 
     // 2nd checkpoint: category
     if (catVal === "" || !catVal) {
-        console.log("please select category") 
+        console.log("media type:", mediaType.value);
+        console.log("%c please select category " , "background-color: #ffd000; color: #2f4f4f" ) 
         return
     }
 
