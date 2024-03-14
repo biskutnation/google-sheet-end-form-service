@@ -24,6 +24,21 @@
             <h3 id="txtHeader">Anugerah Media Agrobank 2024</h3>
         </div>
 
+        <div class="row my-3 py-2">
+            <div class="col-md-2 align-self-md-center">
+                <label class="fw-semibold" for="mediaType">Jenis Media</label>
+            </div>
+            <div class="col-md-10">
+                <select name="mediaType" class="form-select" id="mediaType">
+                    <option value="" selected disabled>. . . . . . . . . . .</option>
+                    <option value="Cetak">Media Cetak & Portal Berita</option>
+                    <option value="Video">Media Penyiaran Televisyen & Video Dalam Talian</option>
+                    <option value="Radio">Media Radio & Podcast</option>
+                </select>
+            </div>
+            
+        </div>
+
         <!-- <div class="row my-3 py-2">
             <div class="col-md-2">
               <label class="smol" for="mediaType">Jenis Media</label>
@@ -48,12 +63,18 @@
             <div class="col-md-10">
                 <select name="category" class="form-select" id="category">             
                     <option value="" selected disabled>. . . . . . . . . . .</option>
-                    <option value="A. Berita">A. Anugerah Media Cetak & Portal Berita - Berita</option>
+                    <option value="A. Berita">A. Berita</option>
+                    <option value="B. Rencana">B. Rencana</option>
+                    <option value="C. Berita Video">C. Berita Video</option>
+                    <option value="D. Doku Video">D. Dokumentari Video</option>
+                    <option value="E. Radio">E. Radio</option>
+                    <option value="F. Sains">F. Sains & Teknologi Pertanian - Rakan Tani Muda Agrobank</option>
+                    <!-- <option value="A. Berita">A. Anugerah Media Cetak & Portal Berita - Berita</option>
                     <option value="B. Rencana">B. Anugerah Media Cetak & Portal Berita - Rencana</option>
                     <option value="C. Video Berita">C. Anugerah Media Penyiaran Televisyen & Video Dalam Talian - Berita</option>
                     <option value="D. Video Doku">D. Anugerah Media Penyiaran Televisyen & Video Dalam Talian - Dokumentari</option>
                     <option value="E. Radio">E. Anugerah Media Radio</option>
-                    <option value="F. Sains">F. Anugerah Sains & Teknologi Pertanian Rakan Tani Muda Agrobank</option>
+                    <option value="F. Sains">F. Anugerah Sains & Teknologi Pertanian Rakan Tani Muda Agrobank</option> -->
                 </select>
             </div>
             
@@ -75,14 +96,14 @@
         </div>
 
         <!-- pre userDetails -->
-        <div class="row py-2 d-block d-md-none bottom-bord fw-semibold text-light">
+        <div class="row py-2 d-block d-md-none agro-color fw-semibold text-light">
             <div class="col">Butiran Peserta</div>                
         </div>
 
         <!-- beginning of userDetails section -->
         <div id="userDetails" class="pb-2 pb-md-4">
             
-            <div class="row bottom-bord fw-semibold text-light">
+            <div class="row agro-color fw-semibold text-light">
                 <div class="col-1 d-none d-md-block px38 numbering">#</div>
                 <div class="col d-none d-md-block text-center">Nama Penuh</div>
                 <div class="col d-none d-md-block text-center">No. K/P</div>
@@ -114,7 +135,7 @@
         </div> <!-- end of userDetails -->
 
         <!-- pre title date -->
-        <div class="row py-2 mt-4 d-block d-md-none bottom-bord fw-semibold text-light">
+        <div class="row py-2 mt-4 d-block d-md-none agro-color fw-semibold text-light">
             <div class="col">Butiran Karya Penyertaan</div>                
         </div>
 
@@ -122,7 +143,7 @@
         <div id="titleDate" class="pb-4">
             
             
-            <div class="row mt-md-3 justify-content-between bottom-bord fw-semibold text-light" >
+            <div class="row mt-md-3 justify-content-between agro-color fw-semibold text-light" >
                 <div class="col-1 d-none d-md-block px38 numbering">#</div>
                 <div class="col d-none d-md-block text-center"><label for="titles">Tajuk</label></div>
                 <div class="col-3 d-none d-md-block text-center"><label for="dates">Tarikh</label></div>
@@ -157,7 +178,7 @@
             <input type="hidden" name="Date">
             <input type="hidden" name="Address">
 
-            <div class="row mt-3 py-2 bottom-bord fw-semibold text-light">
+            <div class="row mt-3 py-2 agro-color fw-semibold text-light">
                 <div class="col"><label for="Link">Pautan Bahan Penyertaan</label></div>                
             </div>
             <div class="row mb-3 py-2">
@@ -166,7 +187,7 @@
                 <div class="col-12"><input type="url" class="form-control" name="Link"></div>
             </div>
 
-            <input type="hidden" name="awdId" value="AGRO24">
+            <input type="hidden" name="awdId" value="Agro24">
             <input type="hidden" name="Send_Email" id="sendEmail" value="yes">
 
             <div class="row justify-content-center mt-4">

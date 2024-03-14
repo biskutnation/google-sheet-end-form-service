@@ -292,11 +292,11 @@ function abc() {
         link : document.getElementsByName("Link")[0]
     }
     obj.cat_len = obj.cat.length;
-    obj.media_len = obj.media_type ? obj.mediaType.length : undefined;
+    obj.media_len = obj.media_type ? obj.media_type.length : undefined;
 
 
     obj.cat[randomMath(obj.cat_len)].selected = true; 
-    if (obj.media_type) obj.media_type[randomMath(obj.media_type)].selected = true; 
+    if (obj.media_type) obj.media_type[randomMath(obj.media_len)].selected = true; 
 
     let users = testDataObject("users");
     let titleDate = testDataObject("titleDate")
@@ -464,49 +464,80 @@ function validation(lang) {
     return (true);
 }
 
-// 29/02/2024 updated
-// category option behavior changes via category type selection
-function optCategory_for_Agro() {
+
+// category option behavior changes
+function optCategory_for_Agro(first_option_selected) {
     
-    // const mediaType = document.getElementById("mediaType");
+    const mediaType = document.getElementById("mediaType");
     const category = document.getElementById("category");
     
-    // let val = mediaType.value[0]; // first letter of media type
-    
-    // IDs' variable    
+    // first letter of media type & category
+    let mediaVal = mediaType.value[0]; 
+    let catVal = category.value[0];
+
+    // DOM IDs' variable    
     const first = "#firstAddButton";
     const second = "#secondAddButton";
 
-    // empty language value or initial point
-    // if (!val || val === "") {
-    //     category.disabled = true;
-    //     category.options[0].selected = true;
-        
-    //     visibilityHide(first);
-    //     visibilityHide(second);
-    //     console.log("Media type not selected");
-    //     return;
-    // }
-    
-    // 29/02/2024
-    if (category.value === "" || !category.value) {
-        visibilityHide(first)
-        visibilityHide(second)
-        console.log("please select category")
+    visibilityHide(first)
+    visibilityHide(second)
+       
+    // 1st checkpoint: media type
+    if (mediaVal === "" || !mediaVal) {
+        console.log("please select media type")
+        category.disabled = true
         return
     }
 
-    // console.log("type:",val);
-    category.disabled = false;
-    // category.options[0].selected = true;
+    console.log("media type:", mediaType.value);
+    if (first_option_selected) category.options[0].selected = true; // select ......... 
+    category.disabled = false;    
+      
+    // mediaVal: C|V|R
+    // options[0] 
+    // options[1] A. Berita
+    // options[2] B. Rencana
+    // options[3] C. Berita Video
+    // options[4] D. Doku Video
+    // options[5] E. Radio
+    // options[6] F. Sains
+
+    for (option of category.options) {
+        option.hidden = true
+        if (!option.value) option.hidden = false;
+    }
     
-    // val: A|B|C|D;
+    // cetak
+    if (mediaVal.search("C") !== -1) {
+        category.options[1].hidden = false;
+        category.options[2].hidden = false;
+        category.options[6].hidden = false;    
+    }
+
+    // video
+    if (mediaVal.search("V") !== -1) {
+        category.options[3].hidden = false;
+        category.options[4].hidden = false;
+        category.options[6].hidden = false;
+    }
+
+    // radio
+    if (mediaVal.search("R") !== -1) {
+        category.options[5].hidden = false;
+    }
+
+    // 2nd checkpoint: category
+    if (catVal === "" || !catVal) {
+        console.log("please select category") 
+        return
+    }
+
     visibilityHide(first,"visible")
     visibilityHide(second);
     oneChildOnly("titleDate");
+    console.log("category:", catVal);
     console.log("team members allowed and one title per entry only")
     return;
-    
 };
 
 function optCategory_for_KPKT() {
@@ -566,6 +597,7 @@ const AWARD_ID = document.getElementsByName("awdId")[0].value
 // add event listener onload & change on category option
 if(AWARD_ID === "Agro24") {
     window.addEventListener("load",function(){optCategory_for_Agro()});
+    document.getElementById("mediaType").addEventListener("change",function(){optCategory_for_Agro("yes")})
     document.getElementById("category").addEventListener("change",function(){optCategory_for_Agro()});
 }
 
