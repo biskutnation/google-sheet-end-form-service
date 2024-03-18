@@ -43,7 +43,7 @@ function sheet_essentials(award_id) {
     Agro24 : {
       SPREAD_ID : "1qV96nOjoEENgxfDlZHTkfPeF9_dwk5Mg0TVQ-dSr0iU",
       SHEET : "responseAgro24",
-      email_template : "KPKT_emel",
+      email_template : "Agro_emel",
       email_title : "Anugerah Media Agrobank 2024 : Penyertaan Diterima ({{xxyyzz}})"
     }
     ,
@@ -238,26 +238,22 @@ function getHTMLcontent(data,essences) {
 function categoryObject(award_id) {
   const object = {
     KPKT24 : {
-           'A. Media Khas' : 'A. Anugerah Khas YBM KM',
-            'B. Perumahan' : 'B. Anugerah Liputan Perumahan Terbaik',
-                  'C. PBT' : 'C. Anugerah Liputan PBT Terbaik',
-           'D. Wira Merah' : 'D. Anugerah Liputan Wira Merah Terbaik',
-                'E. Hijau' : 'E. Anugerah Liputan Kemampanan Bandar & Persekitaran Hijau Terbaik',
-         'F. Sisa Pepejal' : 'F. Anugerah Liputan Pengurusan Sisa Pepejal Terbaik',
-      'G. Kredit Komuniti' : 'G. Anugerah Liputan Kredit Komuniti Terbaik',
-                'H. Radio' : 'H. Anugerah Liputan Radio Terbaik',
-           'I. Multimedia' : 'I. Anugerah Media Khas Multimedia',
-                 'J. Foto' : 'J. Anugerah Kewartawanan Foto Cemerlang',
-                      Foto : 'Fotografi',
-                     Cetak : 'Media Cetak & Portal Berita',
-                        TV : 'Media Penyiaran Televisyen & Video Dalam Talian',
-                     Radio : 'Media Penyiaran Radio'
+           'A. Khas' : 'A. Anugerah Khas YB KM',
+             'B. TV' : 'B. Anugerah Penyiaran Televisyen Terbaik',
+   'C. Video Portal' : 'C. Anugerah Video Portal & Dalam Talian',
+        'D. Artikel' : 'D. Anugerah Penerbitan Artikel Terbaik',
+          'E. Radio' : 'E. Anugerah Penyiaran Radio Terbaik',
+           'F. Foto' : 'F. Anugerah Kewartawanan Foto Terbaik',
+         'G. Medsos' : "G. Anugerah 'Content' Media Sosial Terbaik",
+        'H. Popular' : 'H. Anugerah Video Popular/Pilihan'
     },
     Agro24 : {
-            'A. Cetak' : 'A. ',
-               'B. TV' : 'B. ',
-            'C. Radio' : 'C. ',
-            'D. Sains' : 'D. '
+              'A. Berita' : 'A. Anugerah Media Cetak & Portal Berita - Berita',
+             'B. Rencana' : 'B. Anugerah Media Cetak & Portal Berita - Rencana',
+        'C. Video Berita' : 'C. Anugerah Media Penyiaran Televisyen & Video Dalam Talian - Berita',
+          'D. Video Doku' : 'D. Anugerah Media Penyiaran Televisyen & Video Dalam Talian - Dokumentari',
+               'E. Radio' : 'E. Anugerah Media Radio',
+               'F. Sains' : 'F. Anugerah Sains & Teknologi Pertanian Rakan Tani Muda Agrobank'
     },
     "default" : "no stuff here"
   }
