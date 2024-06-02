@@ -3,12 +3,12 @@
 // procedure for newly added award, should consider:
 //  • award_id, spreadsheet id, sheet name
 //  • sendingEmail(DATANEWROW,essences)
-//  • catObj which will return value of category/language long wording 
+//  • catObj || categoryObject which will return value of category/language long wording 
 //  • email title & template in sheet_essentials
-//  
+//  • year 
 
-// e = test_parameter()
-function doPost(e) {
+// try default value with e = test_parameter()
+function doPost(e = test_parameter()) {
 
   var result = "";
   var response = "";
@@ -30,47 +30,13 @@ function doPost(e) {
 
 }
 
-
-function sheet_essentials(award_id) {
- 
-  const essentials = {
-    KPKT24 : {
-      SPREAD_ID : "1BWZgtI5fmn4KlRR-_aVq15BGGGUDklRgB1n0ljjA2g0",
-      SHEET : "responseKPKT24",
-      email_template : "KPKT_emel",
-      email_title : "AKeMedia KPKT 2024 : Penyertaan Diterima ({{xxyyzz}})"
-    },
-    Agro24 : {
-      SPREAD_ID : "1qV96nOjoEENgxfDlZHTkfPeF9_dwk5Mg0TVQ-dSr0iU",
-      SHEET : "responseAgro24",
-      email_template : "Agro_emel",
-      email_title : "Anugerah Media Agrobank 2024 : Penyertaan Diterima ({{xxyyzz}})"
-    }
-    ,
-    "default" : {
-      SPREAD_ID : "the default doesnt have spreadsheet",
-      SHEET : "",
-      email_template : "",
-      email_title : "abcdefgijklmnopqrstuvwxyz"
-    }
-  }
-  essentials[award_id].getCategoryObject = function() {return categoryObject(award_id)}; // this is quite complicated to explain. the purpose is not to call yet, just standby a function on getting an object without firing it straight away.
-
-  return essentials[award_id] || essentials['default']
-}
-
-function getColumnFromHeaders(column_name,column_headers = "headers") {
-  let col = column_headers.indexOf(column_name) + 1
-  return col
-}
-
 // use this to pass parameters on do_post or writeToSheet
 function test_parameter() {
   
   let object = {
     parameter : {
       // awdId : "KPKT24",
-      awdId : "Agro24",
+      awdId : "CIDB24",
       Category : "G. Kredit Komuniti",
       MediaType : "Foto",
       CatId : "***",
@@ -90,6 +56,50 @@ function test_parameter() {
   return object
 }
 
+function sheet_essentials(award_id) {
+ 
+  const essentials = {
+    KPKT24 : {
+      SPREAD_ID : "1BWZgtI5fmn4KlRR-_aVq15BGGGUDklRgB1n0ljjA2g0",
+      SHEET : "responseKPKT24",
+      email_template : "KPKT_emel",
+      email_title : "AKeMedia KPKT 2024 : Penyertaan Diterima ({{xxyyzz}})"
+    },
+    Agro24 : {
+      SPREAD_ID : "1qV96nOjoEENgxfDlZHTkfPeF9_dwk5Mg0TVQ-dSr0iU",
+      SHEET : "responseAgro24",
+      email_template : "Agro_emel",
+      email_title : "Anugerah Media Agrobank 2024 : Penyertaan Diterima ({{xxyyzz}})"
+    },
+    KPA24 : {
+      SPREAD_ID : "1nGlnaHHT6dD4crdQzNxCchqg5Lj3uAdrecv7UBCKoAM",
+      SHEET : "responseKPA24",
+      email_template : "KPA_emel",
+      email_title : "KPA 2024 : Entry Received ({{xxyyzz}})"
+    },
+    CIDB24 : {
+      SPREAD_ID : "1Y5WUZEvUdf7j2466yVB0J7Kxq-THxDZW80Z9H9hwPqc",
+      SHEET : "responseCIDB24",
+      email_template : "CIDB_emel",
+      email_title : "AMP CIDB 2024 : Entry Received ({{xxyyzz}})"
+    },
+    "default" : {
+      SPREAD_ID : "the default doesnt have spreadsheet",
+      SHEET : "",
+      email_template : "",
+      email_title : "abcdefgijklmnopqrstuvwxyz"
+    }
+  }
+  essentials[award_id].getCategoryObject = function() {return categoryObject(award_id)}; // this is quite complicated to explain. the purpose is not to call yet, just standby a function on getting an object without firing it straight away.
+
+  return essentials[award_id] || essentials['default']
+}
+
+function getColumnFromHeaders(column_name,column_headers = "headers") {
+  let col = column_headers.indexOf(column_name) + 1
+  return col
+}
+
 // for testing purpose
 function logThis(param = test_parameter()) {
   Logger.log(param)
@@ -104,7 +114,7 @@ function check_Yes_No(status) {
 function writeToSheet(e) {
   // write parameter values to sheet & return data of NEWROW
 
-  const essences = sheet_essentials(e.parameter.awdId) // from ssId to awdId
+  const essences = sheet_essentials(e.parameter.awdId) // award_id
   const SEND_EMAIL = e.parameter.Send_Email;
 
   Logger.log(`Spread & Sheet : ${essences.SPREAD_ID} & ${essences.SHEET}
@@ -254,6 +264,30 @@ function categoryObject(award_id) {
           'D. Video Doku' : 'D. Anugerah Media Penyiaran Televisyen & Video Dalam Talian - Dokumentari',
                'E. Radio' : 'E. Anugerah Media Radio',
                'F. Sains' : 'F. Anugerah Sains & Teknologi Pertanian Rakan Tani Muda Agrobank'
+    },
+    KPA24 : {
+        '1A. Feature' : '1A. Journalism Award (Feature and News Feature)',
+      '1B. Broadcast' : '1B. Journalism Award (Broadcast)',
+    '1C. Photography' : '1C. Journalism Award (Photography)',
+            '2. News' : '2. News Reporting Award (Non-Feature)',
+          '3. Sports' : '3. Sports Journalism Award',
+        '4. Business' : '4. Business and Economic Reporting Award',
+   '5. Environmental' : '5. Environmental Journalism Award',
+   '6. Entertainment' : '6. Entertainment, Culture and Arts Reporting Award',
+                   BM : 'Print & Online Portal - Bahasa Melayu',
+                  ENG : 'Print & Online Portal - English',
+                  CHI : 'Print & Online Portal - Chinese',
+                   TV : 'Broadcast Television & Online Video',
+                Photo : 'Photography'
+    },
+    CIDB24 : {
+          'A. BERITA' : 'A. MEDIA CETAK & PORTAL BERITA - LAPORAN KHAS BERITA',
+         'B. RENCANA' : 'B. MEDIA CETAK & PORTAL BERITA - RENCANA',
+           'C. VIDEO' : 'C. MEDIA PENYIARAN TELEVISYEN & VIDEO DALAM TALIAN - LAPORAN KHAS & DOKUMENTARI',
+           'D. RADIO' : 'D. MEDIA PENYIARAN RADIO',
+            'E. FOTO' : 'E. FOTOGRAFI',
+      'F. INFOGRAFIK' : 'F. INFOGRAFIK PEGUN',
+     'G. VIDEOGRAFIK' : 'G. INFOGRAFIK VIDEO'
     },
     "default" : "no stuff here"
   }
